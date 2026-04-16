@@ -29,9 +29,7 @@ export const signup = async (req, res) => {
     },
     model: User,
   });
-  const generatedAccountNumber = Math.floor(
-    1000000000 + Math.random() * 9000000000,
-  ).toString();
+  const generatedAccountNumber = crypto.randomUUID().replace(/-/g, "");
 
   await create({
     data: {
@@ -80,7 +78,7 @@ export const login = async (req, res) => {
   await SET({
     key: `user_tokens:${user._id}:${accessToken}`,
     value: "valid",
-    expiration: parseInt(ACCESS_TOKEN_EXPIRATION_AFTER) * 60,
+    seconds: parseInt(ACCESS_TOKEN_EXPIRATION_AFTER) * 60,
   });
 
   return successResponse({
